@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   clean.c                                            :+:    :+:            */
+/*   ft_strcmp.c                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/05/12 14:10:32 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/15 17:32:04 by abobas        ########   odam.nl         */
+/*   Created: 2020/05/15 20:46:56 by abobas        #+#    #+#                 */
+/*   Updated: 2020/05/15 22:36:53 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-void    free_args(t_minishell *sh)
+int		ft_strcmp(char *s1, char *s2)
 {
-	int     i;
+	int		i;
 
 	i = 0;
-	while (i < sh->arg_count)
-	{
-		if (sh->args[i])
-			free(sh->args[i]);
+	if (!s1 && !s2)
+		return (0);
+	if ((s1 && !s2) || (!s1 && s2))
+		return (1);
+	while (s1[i] && s2[i] && s1[i] == s2[i])
 		i++;
-	}
-	free(sh->args);
-}
-
-void    clean(t_minishell *sh)
-{
-	free(sh->line);
-	free_args(sh);
-	free(sh->bool);
+	return (s1[i] - s2[i]);
 }

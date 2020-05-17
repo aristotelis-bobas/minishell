@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   minishell.c                                        :+:    :+:            */
+/*   ft_strdup.c                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/03/09 13:43:26 by novan-ve      #+#    #+#                 */
-/*   Updated: 2020/05/15 17:27:48 by abobas        ########   odam.nl         */
+/*   Created: 2020/05/15 20:38:59 by abobas        #+#    #+#                 */
+/*   Updated: 2020/05/16 02:26:08 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "includes/libft.h"
+#include <stdlib.h>
 
-int		main(int ac, char **av, char **env)
+char	*ft_strdup(char *str)
 {
-	t_minishell		sh;
+	char	*dst;
+	int		i;
 
-	setup_list(&sh, env);
-	while (1)
+	i = 0;
+	if (!str)
+		return (0);
+	dst = (char*)malloc(sizeof(char) * ft_strlen(str) + 1);
+	if (!dst)
+		return (0);
+	while (str[i] != '\0')
 	{
-		print_prompt(&sh);
-		read_input(&sh);
-		split_input(&sh);
-		if (!input_check(&sh))
-			continue ;
-		parse_input(&sh);
-		show_args(&sh);    						//UNCOMMENT FOR DEBUGGING
-		execute(&sh);
-		clean(&sh);
+		dst[i] = str[i];
+		i++;
 	}
-	return (0);
-	av[0][0] = ac;
+	dst[i] = '\0';
+	return (dst);
 }

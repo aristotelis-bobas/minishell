@@ -6,61 +6,54 @@
 #    By: abobas <abobas@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/13 15:12:27 by abobas        #+#    #+#                  #
-#    Updated: 2020/05/15 17:36:18 by abobas        ########   odam.nl          #
+#    Updated: 2020/05/17 16:12:17 by abobas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
+NAME = 			minishell
 
-MAN_OBJ = 	minishell.o \
-			prompt.o \
-			read_input.o \
-			split_input.o \
-			input_check.o \
-			parse_input_1.o \
-			parse_input_2.o \
-			parse_input_3.o \
-			list.o \
-			execute.o \
-			builtins.o \
-			environment.o \
-			clean.o \
-			utilities_1.o \
-			utilities_2.o \
-			utilities_3.o \
-			troubleshoot.o 
-			#launch.c
+SRC_DIR	=		./src/
 
-BON_OBJ =	
+HEADER 	= 		./src/includes/minishell.h
 
-ifdef WITH_BONUS
-OBJ_FILES = $(MAN_OBJ) $(BON_OBJ)
-else
-OBJ_FILES = $(MAN_OBJ)
-endif
+SRC = 			minishell.c \
+				initialization.c \
+				reset.c \
+				parse.c \
+				parse_read.c \
+				parse_split.c \
+				parse_sanitize.c \
+				parse_validate.c \
+				parse_quotes.c \
+				utilities_1.c \
+				utilities_2.c \
+				debug.c
 
-FLAGS = -Wall -Werror -Wextra
+SRC :=			$(SRC:%=$(SRC_DIR)%)
 
-HEADER = minishell.h
+FLAGS = 		-Wall -Werror -Wextra
+
+LIB_DIR	=		./libft
+
+LIB =			$(LIB_DIR)/libft.a
+
+ADD_LIB = 		-L $(LIB_DIR) -lft
 
 all: $(NAME)
 
-$(NAME): $(OBJ_FILES) $(HEADER)
-	gcc $(FLAGS) $(OBJ_FILES) -o $(NAME)
+$(NAME): $(LIB) $(SRC) $(HEADER) 
+	gcc $(FLAGS) $(SRC) $(ADD_LIB) -o $(NAME)
 
-%.o: %.c
-	gcc $(FLAGS) -c -o $@ $<
+%.a:
+	$(MAKE) -C $(LIB_DIR)
 
-run: $(NAME)
+run: $(NAME) clean
 	./minishell
 
-bonus: 
-	$(MAKE) WITH_BONUS=1 all
-
 clean:
-	rm -rf $(MAN_OBJ) $(BON_OBJ)
+	$(MAKE) -C $(LIB_DIR) clean
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -rf $(NAME) $(LIB)
 
 re:	fclean all

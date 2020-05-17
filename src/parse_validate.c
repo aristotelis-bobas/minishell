@@ -6,11 +6,11 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/15 17:11:46 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/15 17:31:34 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/17 04:48:31 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "includes/minishell.h"
 
 int		quote_check(char *arg)
 {
@@ -37,20 +37,23 @@ int		quote_check(char *arg)
 	return (1);
 }
 
-int		input_check(t_minishell *sh)
+int		parse_validate(t_minishell *sh)
 {
 	int		i;
+	int		y;
 
 	i = 0;
-
-	while (i < sh->arg_count)
+	while (i < sh->line_count)
 	{
-		if (!quote_check(sh->args[i]))
+		y = 0;
+		while (y < sh->arg_count[i])
 		{
-			free(sh->line);
-			free_args(sh);
-			ft_error("Missing quotes");
-			return (0);
+			if (!quote_check(sh->args[i][y]))
+			{
+				put_error("Missing quotes");
+				return (0);
+			}
+			y++;
 		}
 		i++;
 	}

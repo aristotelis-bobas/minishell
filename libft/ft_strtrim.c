@@ -1,66 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   utilities_3.c                                      :+:    :+:            */
+/*   ft_strtrim.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/05/13 17:00:39 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/15 17:16:33 by abobas        ########   odam.nl         */
+/*   Created: 2020/05/17 14:51:19 by abobas        #+#    #+#                 */
+/*   Updated: 2020/05/17 14:55:58 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "includes/libft.h"
+#include <stdlib.h>
 
-char	*ft_strjoin(char *s1, char *s2)
-{
-	int		length;
-	char	*new;
-	int		i;
-	int		y;
-
-	i = 0;
-	y = 0;
-	length = ft_strlen(s1) + ft_strlen(s2) + 1;
-	new = (char*)malloc(sizeof(char) * length);
-	if (!new)
-		exit(EXIT_FAILURE);
-	if (s1)
-	{
-		while (s1[i] != '\0')
-		{
-			new[y] = s1[i];
-			y++;
-			i++;
-		}
-		i = 0;
-	}
-	if (s2)
-	{
-		while (s2[i] != '\0')
-		{
-			new[y] = s2[i];
-			y++;
-			i++;
-		}
-	}
-	new[y] = '\0';
-	return (new);
-}
-
-char	*ft_trim(char *src)
+char	*ft_strtrim(char *src, int n)
 {
 	char	*dst;
 	int		i;
 	int		y;
 	int		length;
 
-	length = ft_strlen(src) - 1;
+	length = ft_strlen(src) - (2 * n) + 1;
+	if (length < 1)
+		return (0);
 	i = 0;
-	y = 1;
+	y = n;
 	dst = (char*)malloc(sizeof(char) * length);
 	if (!dst)
-		exit(EXIT_FAILURE);
+		return (0);
 	while (y < length)
 	{
 		dst[i] = src[y];
@@ -68,6 +35,5 @@ char	*ft_trim(char *src)
 		y++;
 	}
 	dst[i] = '\0';
-	free(src);
 	return (dst);
 }
