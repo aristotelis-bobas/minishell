@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/16 17:04:31 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/17 15:04:09 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/17 23:33:43 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ void	minishell(t_minishell *sh)
 	while (1)
 	{
 		reset(sh);
-		//if (!prompt(sh))
-		//	continue ;
+		if (!prompt(sh))
+			continue ;
 		if (!parse(sh))
 			continue ;
 		//debug_minishell(sh);

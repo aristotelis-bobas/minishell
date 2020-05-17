@@ -6,7 +6,7 @@
 #    By: abobas <abobas@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/13 15:12:27 by abobas        #+#    #+#                  #
-#    Updated: 2020/05/17 16:12:17 by abobas        ########   odam.nl          #
+#    Updated: 2020/05/17 23:33:34 by abobas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,8 @@ HEADER 	= 		./src/includes/minishell.h
 
 SRC = 			minishell.c \
 				initialization.c \
+				environment.c \
+				prompt.c \
 				reset.c \
 				parse.c \
 				parse_read.c \
