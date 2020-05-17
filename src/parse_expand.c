@@ -1,43 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   minishell.c                                        :+:    :+:            */
+/*   parse_expand.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/05/16 17:04:31 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/17 23:55:15 by abobas        ########   odam.nl         */
+/*   Created: 2020/05/17 23:45:04 by abobas        #+#    #+#                 */
+/*   Updated: 2020/05/17 23:57:44 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-void	minishell(t_minishell *sh)
+int		parse_expand(t_minishell *sh)
 {
-	while (1)
+	int		i;
+	int		j;
+	
+	i = 0;
+	while (i < sh->line_count)
 	{
-		reset(sh);
-		if (!prompt(sh))
-			continue ;
-		if (!parse(sh))
-			continue ;
-		//debug_minishell(sh);               /// UNCOMMENT FOR DEBUGGING
-		//if (!execute(sh))
-		//	continue ;
+		j = 0;
+		while (j < sh->arg_count[i])
+		{
+			//// IF VARIABLES IN ARG >> EXPAND VARIABLES
+			//// IF ERROR >> RETURN (0)
+			j++;
+		}
+		i++;
 	}
+	if (!parse_sanitize(sh)) ///// HAALT ALLE ARGUMENTS NULL-POINTER ZIJN ER TUSSEN UIT
+		return (0);
+	return (1);
 }
-
-int			main(int ac, char **av, char **env)
-{
-	t_minishell		sh;
-	t_vector		v;
-
-	v = init_env(env);
-	sh = init_minishell();
-	sh.env = &v;
-	minishell(&sh);
-	return(0);
-	(void)ac;
-	(void)av;
-}
-

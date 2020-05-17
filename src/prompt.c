@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/13 15:49:50 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/16 20:28:24 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/17 23:42:52 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int		prompt(t_minishell *sh)
 	char	ret;
 
 	ret = 0;
-	user = get_env(sh, "USERNAME");
+	user = get_env(sh, "USER");
 	host = get_host();
 	dir = get_dir(sh);
 	if (user && host && dir)
