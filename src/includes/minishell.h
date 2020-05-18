@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/03/09 13:46:12 by novan-ve      #+#    #+#                 */
-/*   Updated: 2020/05/18 20:11:33 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/18 23:30:21 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ char			*get_env(t_minishell *sh, char *env);
 int				expand_length(t_minishell *sh, char *src);
 void			put_error(char *s);
 int				is_space(char c);
-int				is_semi(char *str);
-int				is_literal(char *str);
+int				is_double_quote(char *str);
+int				is_single_quote(char *str);
 int				is_var(char *str);
-int				is_varchar(char c);
+int				is_var_char(char c);
 int				is_env(char *str);
 
 void			debug(t_minishell *sh);

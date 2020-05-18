@@ -6,14 +6,13 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/16 01:45:37 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/16 03:07:30 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/18 23:48:00 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/libft.h"
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
 
 char	*ft_readline(int fd, int buf_size)
 {

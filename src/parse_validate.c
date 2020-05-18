@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/15 17:11:46 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/17 23:32:52 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/18 23:31:00 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int		quote_check(char *arg)
 	count = 0;
 	while (arg[i])
 	{
-		if (!quote && (arg[i] == 34 || arg[i] == 39))
+		if (!quote && (arg[i] == '\'' || arg[i] == '"'))
 		{
 			quote = arg[i];
 			count = 1;

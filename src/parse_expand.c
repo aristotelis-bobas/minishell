@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/17 23:45:04 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/18 20:14:26 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/18 23:31:40 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ char	*expand_arg(t_minishell *sh, char* dst, char *src)
 	while (src[i] != '\0')
 	{
 		i++;
-		if (src[i - 1] == '$' && is_varchar(src[i]))
+		if (src[i - 1] == '$' && is_var_char(src[i]))
 		{
 			start = i;
-			while (is_varchar(src[i]))
+			while (is_var_char(src[i]))
 				i++;
 			if ((j = expand(j, dst, ft_substr(src, start, i - start), sh)) < 0)
 				return (0);

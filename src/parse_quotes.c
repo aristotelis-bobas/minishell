@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/17 15:04:12 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/17 23:32:25 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/18 23:29:26 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-int		parse_literal(t_minishell *sh)
+int		parse_single_quote(t_minishell *sh)
 {
 	int		i;
 	int		j;
@@ -27,7 +27,7 @@ int		parse_literal(t_minishell *sh)
 		j = 0;
 		while (j < sh->arg_count[i])
 		{
-			if (is_literal(sh->args[i][j]))
+			if (is_single_quote(sh->args[i][j]))
 			{
 				sh->data[i][j] = 1;
 				if (!(tmp = ft_strtrim(sh->args[i][j], 1)))
@@ -47,7 +47,7 @@ int		parse_literal(t_minishell *sh)
 	return (1);
 }
 
-int		parse_semi(t_minishell *sh)
+int		parse_double_quote(t_minishell *sh)
 {
 	int		i;
 	int		j;
@@ -59,7 +59,7 @@ int		parse_semi(t_minishell *sh)
 		j = 0;
 		while (j < sh->arg_count[i])
 		{
-			if (is_semi(sh->args[i][j]))
+			if (is_double_quote(sh->args[i][j]))
 			{
 				sh->data[i][j] = 2;
 				if (!(tmp = ft_strtrim(sh->args[i][j], 1)))
@@ -83,9 +83,9 @@ int		parse_quotes(t_minishell *sh)
 {
 	if (!(sh->data = allocate_data(sh->line_count, sh->arg_count)))
 		return (0);
-	if (!parse_literal(sh))
+	if (!parse_single_quote(sh))
 		return (0);
-	if (!parse_semi(sh))
+	if (!parse_double_quote(sh))
 		return (0);
 	return (1);
 }
