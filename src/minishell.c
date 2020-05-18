@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/16 17:04:31 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/18 18:35:30 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/18 22:25:42 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	minishell(t_minishell *sh)
 			continue ;
 		if (!parse(sh))
 			continue ;
-		debug(sh);
+		//debug(sh);
 		evaluate(sh);
 	}
 }
