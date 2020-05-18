@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/07 15:50:21 by novan-ve      #+#    #+#                 */
-/*   Updated: 2020/05/18 15:11:10 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/19 00:32:47 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	evaluate_line(int arg_count, char **args, t_minishell *sh)
 		export(arg_count, args, sh);
 	else if (!ft_strcmp(args[0], "unset"))
 		unset(arg_count, args, sh);
+	else
+		execute(args, sh);
 }
 
 void	evaluate(t_minishell *sh)

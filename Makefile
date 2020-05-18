@@ -6,7 +6,7 @@
 #    By: abobas <abobas@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/13 15:12:27 by abobas        #+#    #+#                  #
-#    Updated: 2020/05/18 20:14:01 by abobas        ########   odam.nl          #
+#    Updated: 2020/05/19 00:34:06 by abobas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRC = 			minishell.c \
 				parse_quotes.c \
 				parse_expand.c \
 				evaluate.c \
+				execute.c \
 				builtins.c \
 				utilities_1.c \
 				utilities_2.c \
