@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/19 00:25:13 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/19 01:20:46 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/19 03:10:50 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,33 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
+void	waiting(pid_t pid, t_minishell *sh)
+{
+	int		status;
+
+	status = 1;
+	while (1)
+	{
+		waitpid(pid, &status, WUNTRACED);			/// UNTRACED PARENT PROCESS TO ESCAPE SIGNALS ????
+		if (WIFEXITED(status))
+		{
+			env_delete("?", sh->env);				////WEXITSTATUS(status) for process exit status // 1, 0 zijn program exit status
+			env_add("?=0", sh->env);
+			return ;
+		}
+		//if (WIFSIGNALED(status))					/// SIGNAL STOP ??
+		//{
+		//	env_delete("?", sh->env);
+		//	env_add("?=2", sh->env);
+		//	return ;
+		//}
+	}
+}
+
 void	execute(char **av, t_minishell *sh)
 {
 	pid_t	pid;
 	char	*executable;
-	int		status;
 
 	if (!(executable = ft_strjoin("/bin/", av[0])))
 		return ;
@@ -37,8 +59,5 @@ void	execute(char **av, t_minishell *sh)
 		}
 	}
 	else
-	{
-		while (!WIFEXITED(status))
-			wait(&status);
-	}	
+		waiting(pid, sh);
 }

@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/13 00:53:59 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/18 20:10:51 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/19 02:30:51 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 void		export(int ac, char **av, t_minishell *sh)
 {
 	int		i;
-	char	*insert;
 	
 	i = 1;
 	if (ac > 1)
@@ -25,20 +24,33 @@ void		export(int ac, char **av, t_minishell *sh)
 		while (i < ac)
 		{
 			if (is_env(av[i]))
-			{
-				if (!(insert = ft_strdup(av[i])))
-					put_error(strerror(errno));
-				else
-					vector_add(sh->env, insert);
-			}
+				env_add(av[i], sh->env);
 			i++;
 		}
 	}
 }
 
-void	unset(int ac, char **av, t_minishell *sh)
+void	env_delete(char *reference, t_vector *v)
 {
 	int		delete;
+
+	delete = vector_search_env(v, reference);
+	if (delete > 0)
+		vector_delete(v, delete);
+}
+
+void	env_add(char *reference, t_vector *v)
+{
+	char	*insert;
+	
+	if (!(insert = ft_strdup(reference)))
+		put_error(strerror(errno));
+	else
+		vector_add(v, insert);
+}
+
+void	unset(int ac, char **av, t_minishell *sh)
+{
 	int		i;
 
 	i = 1;
@@ -48,9 +60,7 @@ void	unset(int ac, char **av, t_minishell *sh)
 		{
 			if (is_env(av[i]))
 				put_error("Not a valid identifier");
-			delete = vector_search_env(sh->env, av[i]);
-			if (delete > 0)
-				vector_delete(sh->env, delete);
+			env_delete(av[i], sh->env);
 			i++;
 		}
 	}

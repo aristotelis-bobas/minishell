@@ -6,12 +6,14 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/17 03:49:40 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/17 15:20:20 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/19 02:31:06 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 #include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
 t_vector	init_env(char **env)
 {
@@ -24,6 +26,7 @@ t_vector	init_env(char **env)
 		put_error("Retrieving environment variables has failed");
 		exit(1);
 	}
+	env_add("?=0", &v);
 	return (v);
 }
 
