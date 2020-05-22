@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/17 03:49:40 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/19 02:31:06 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/22 13:46:20 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,19 @@ t_vector	init_env(char **env)
 {
 	t_vector		v;
 
-	vector_init(&v);
-	vector_populate(&v, env);
+	if (!vector_init(&v))
+	{
+		put_error(strerror(errno));
+		exit(1);
+	}
+	if (!vector_populate(&v, env))
+	{
+		put_error(strerror(errno));
+		exit(1);
+	}
 	if (!v.data)
 	{
-		put_error("Retrieving environment variables has failed");
+		put_error(strerror(errno));
 		exit(1);
 	}
 	env_add("?=0", &v);

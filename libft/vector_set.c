@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/16 00:39:28 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/16 00:59:46 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/22 13:39:13 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	vector_set(t_vector *v, int index, char *data)
 {
 	if (index >= 0 && index < v->total)
 	{
-		free(v->data[index]);
+		if (v->data[index])
+			free(v->data[index]);
 		v->data[index] = data;
 	}
 }

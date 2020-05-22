@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/17 23:45:04 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/18 23:31:40 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/19 13:13:23 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int		expand(int j, char *dst, char *env, t_minishell *sh)
 	
 	if (!env)
 	{
+		put_error(strerror(errno));
 		free(dst);
 		return (-1);
 	}
