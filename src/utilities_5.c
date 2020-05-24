@@ -1,42 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   minishell.c                                        :+:    :+:            */
+/*   utilities_5.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/05/16 17:04:31 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/24 01:21:45 by abobas        ########   odam.nl         */
+/*   Created: 2020/05/18 20:12:43 by abobas        #+#    #+#                 */
+/*   Updated: 2020/05/24 02:17:20 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
+#include <unistd.h>
 
-void	minishell(t_minishell *sh)
+int		is_space(char c)
 {
-	while (1)
-	{
-		reset(sh);
-		if (!prompt(sh))
-			continue ;
-		if (!parse(sh))
-			continue ;
-		//debug(sh);
-		evaluate(sh);
-	}
+	return (c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\a');
 }
 
-int		main(int ac, char **av, char **env)
+int		is_redirect(char c)
 {
-	t_minishell		sh;
-	t_vector		v;
+	return (c == '>' || c == '<');
+}
 
-	v = init_env(env);
-	sh = init_minishell();
-	sh.env = &v;
-	minishell(&sh);
-	return(0);
-	(void)ac;
-	(void)av;
+void	put_error(char *s)
+{
+	write(2, "Minishell: ", 11);
+	write(2, s, ft_strlen(s));
+	write(2, "\n", 1);
 }
 

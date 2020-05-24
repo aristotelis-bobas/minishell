@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/16 20:44:49 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/18 00:32:46 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/23 14:33:24 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,27 @@ int				traverse_word(t_minishell *sh, int i)
 {
 	int		count;
 	int		quote;
+	int		start;
 
 	count = 0;
 	quote = 0;
+	start = i;
 	while (sh->line[i] != '\0')
 	{
 		if (is_space(sh->line[i]) && !(count % 2))
 			break ;
+		if (is_redirect(sh->line[i]))
+			start++;
+		if (is_redirect(sh->line[i]) && i > start && !(count % 2))
+			break ;
+		if (is_redirect(sh->line[i]) && !is_redirect(sh->line[i + 1]) && !(count % 2))
+		{
+			i++;
+			break ;
+		}
 		if (sh->line[i] == ';' && !(count % 2))
 			break ;
-		if ((sh->line[i] == 34 || sh->line[i] == 39) && !quote)
+		if ((sh->line[i] == '\'' || sh->line[i] == '"') && !quote)
 		{
 			quote = sh->line[i];
 			count++;
@@ -47,7 +58,7 @@ static void		count_lines(t_minishell *sh)
 	sh->line_count = 1;
 	while (sh->line[i] != '\0')
 	{
-		if (is_space(sh->line[i]))
+		if (is_space(sh->line[i]) || is_redirect(sh->line[i]))
 			i++;
 		else if (sh->line[i] == ';')
 		{
@@ -75,6 +86,12 @@ static void		count_args(t_minishell *sh)
 		{
 			y++;
 			sh->arg_count[y] = 0;
+			i++;
+		}
+		else if (is_redirect(sh->line[i]))
+		{
+			if (!is_redirect(sh->line[i + 1]))
+				sh->arg_count[y]++;
 			i++;
 		}
 		else

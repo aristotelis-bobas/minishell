@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/17 15:04:12 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/18 23:29:26 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/23 15:18:33 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int		parse_double_quote(t_minishell *sh)
 				free(sh->args[i][j]);
 				sh->args[i][j] = tmp;
 			}
-			else
+			else if (sh->data[i][j] != 1)
 				sh->data[i][j] = 0;
 			j++;
 		}

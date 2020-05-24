@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/17 02:18:52 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/17 14:31:34 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/23 15:02:41 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,42 @@ char    		***fill_array(t_minishell *sh, char ***array, int line_count, int *arg
 	return (array);
 }
 
+int				**fill_data(int **data, t_minishell *sh)
+{
+	int		i;
+	int		y;
+	int		x;
+	int		z;
+	
+	i = 0;
+	x = 0;
+	while (i < sh->line_count)
+	{
+		if (sh->arg_count[i] != 0)
+		{
+			y = 0;
+			z = 0;
+			while (y < sh->arg_count[i])
+			{
+				if (sh->args[i][y] != 0)
+				{
+					data[x][z] = sh->data[i][y];
+					z++;
+				}
+				y++;
+			}
+			x++;
+		}
+		i++;
+	}
+	return (data);
+}
+
 int				parse_sanitize(t_minishell *sh)
 {
 	int		line_count;
 	int		*arg_count;
+	int		**data;
 	char	***array;
 
 	line_count = count_lines(sh);
@@ -108,6 +140,14 @@ int				parse_sanitize(t_minishell *sh)
 		return (0);
 	if (!(array = fill_array(sh, array, line_count, arg_count)))
 		return (0);
+	if (sh->data)
+	{
+		if (!(data = allocate_data(line_count, arg_count)))
+			return (0);
+		data = fill_data(data, sh);
+		free_data(sh->data, sh->line_count);
+		sh->data = data;
+	}
 	free_array(sh->args, sh->line_count, sh->arg_count);
 	free(sh->arg_count);
 	sh->args = array;

@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/07 15:50:21 by novan-ve      #+#    #+#                 */
-/*   Updated: 2020/05/22 21:22:50 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/24 01:55:30 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
 
-void	evaluate_line(int arg_count, char **args, t_minishell *sh)
+void	evaluate_commands(int arg_count, char **args, t_minishell *sh, int i)
 {
 	if (!ft_strcmp(args[0], "exit"))
 		exit(0);
@@ -32,7 +33,7 @@ void	evaluate_line(int arg_count, char **args, t_minishell *sh)
 	else if (!ft_strcmp(args[0], "unset"))
 		unset(arg_count, args, sh);
 	else
-		execute(args, sh);
+		execute(args, sh, i);
 }
 
 void	export_command(char *arg, t_minishell *sh)
@@ -49,6 +50,30 @@ void	export_command(char *arg, t_minishell *sh)
 	free(insert);
 }
 
+void	set_file_descriptor(t_minishell *sh, int i)
+{
+	if (sh->file_descriptors[i][0])
+	{
+		if ((dup2(sh->file_descriptors[i][1], 1)) < 0)
+			put_error(strerror(errno));
+		close(sh->file_descriptors[i][1]);
+	}
+}
+
+void	reset_file_descriptor(t_minishell *sh, int i)
+{
+	if (sh->file_descriptors[i][0])
+	{
+		if ((dup2(sh->saved_stdout, 1)) < 0)
+			put_error(strerror(errno));
+	}
+	if (sh->file_descriptors[i][2])
+	{
+		if ((dup2(sh->saved_stdin, 0)) < 0)
+			put_error(strerror(errno));
+	}
+}
+
 void	evaluate(t_minishell *sh)
 {
 	int		i;
@@ -57,7 +82,9 @@ void	evaluate(t_minishell *sh)
 	while (i < sh->line_count)
 	{
 		export_command(sh->args[i][0], sh);
-		evaluate_line(sh->arg_count[i], sh->args[i], sh);
+		set_file_descriptor(sh, i);
+		evaluate_commands(sh->arg_count[i], sh->args[i], sh, i);
+		reset_file_descriptor(sh, i);
 		i++;
 	}
 }

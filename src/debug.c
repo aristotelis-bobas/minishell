@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/12 13:41:10 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/18 01:53:07 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/24 01:54:48 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,19 @@ void		show_args(t_minishell *sh)
 	}
 }
 
-void		show_linecount(t_minishell *sh)
+void		show_filedescriptors(t_minishell *sh)
 {
-	ft_printf("line_count = %d\n", sh->line_count);
+	int		i;
+
+	i = 0;
+	while (i < sh->line_count)
+	{
+		ft_printf("file_descriptor[%d][0] = %d\n", i, sh->file_descriptors[i][0]);
+		ft_printf("file_descriptor[%d][1] = %d\n", i, sh->file_descriptors[i][1]);
+		ft_printf("file_descriptor[%d][2] = %d\n", i, sh->file_descriptors[i][2]);
+		ft_printf("file_descriptor[%d][3] = %d\n", i, sh->file_descriptors[i][3]);
+		i++;
+	}
 }
 
 void		show_argcount(t_minishell *sh)
@@ -71,13 +81,16 @@ void		show_data(t_minishell *sh)
 void		debug(t_minishell *sh)
 {
 	ft_printf("\n========================DEBUGGER========================\n");
-	show_linecount(sh);
+	ft_printf("line_count = %d\n", sh->line_count);
 	ft_printf("\n");
-	show_argcount(sh);
+	if (sh->arg_count)
+		show_argcount(sh);
 	ft_printf("\n");
 	if (sh->args)
 		show_args(sh);
 	if (sh->data)
 		show_data(sh);
+	if (sh->file_descriptors)
+		show_filedescriptors(sh);
 	ft_printf("========================================================\n\n");
 }

@@ -5,8 +5,8 @@
 /*                                                     +:+                    */
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/05/17 02:38:51 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/22 18:27:45 by abobas        ########   odam.nl         */
+/*   Created: 2020/05/23 16:45:43 by abobas        #+#    #+#                 */
+/*   Updated: 2020/05/24 01:51:28 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,106 +15,41 @@
 #include <string.h>
 #include <errno.h>
 
-int		env_cmp(char *reference, char *data)
+void	free_file_descriptors(t_minishell *sh, int line_count)
 {
-	int		i;
+	int		y;
 
-	i = 0;
-	if (!reference || !data)
-		return (1);
-	while (reference[i] != '\0' && data[i] != '\0')
+	y = 0;
+	while (y < line_count)
 	{
-		if (reference[i] != data[i])
-			return (1);
-		i++;
+		if (sh->file_descriptors[y])
+			free(sh->file_descriptors[y]);
+		y++;
 	}
-	if (reference[i] == '\0' && data[i] == '=')
-		return (0);
-	else
-		return (1);
+	free(sh->file_descriptors);
 }
 
-int		expand_length(t_minishell *sh, char *src)
+int		allocate_file_descriptors(t_minishell *sh)
 {
-	int		i;
-	int		length;
-	int		start;
-	char	*var;
-	char	*env;
+	int 	i;
 
 	i = 0;
-	length = 0;
-	while (src[i] != '\0')
+	sh->file_descriptors = (int**)malloc(sizeof(int*) * sh->line_count);
+	if (!sh->file_descriptors)
+		return (0);
+	while (i < sh->line_count)
 	{
-		i++;
-		if (src[i - 1] == '$' && is_var_char(src[i]))
+		sh->file_descriptors[i] = (int*)malloc(sizeof(int) * 4);
+		if (!sh->file_descriptors[i])
 		{
-			start = i;
-			while (is_var_char(src[i]))
-				i++;
-			if (!(var = ft_substr(src, start, i - start)))
-			{
-				put_error(strerror(errno));
-				return (-1);
-			}
-			env = get_env(sh, var);
-			free(var);
-			length += ft_strlen(env);
-			if (env)
-				free(env);
+			free_file_descriptors(sh, i);
+			return (0);
 		}
-		else
-			length++;
-	}
-	return (length);
-}
-
-int			vector_search_env(t_vector *v, char *reference)
-{
-	int		index;
-
-	index = 0;
-	while (index < v->total)
-	{
-		if (!env_cmp(reference, v->data[index]))
-			return (index);
-		index++;
-	}
-	return (-1);
-}
-
-char		*get_env(t_minishell *sh, char *env)
-{
-	char	*tmp;
-	
-	if (!(tmp = vector_get(sh->env, vector_search_env(sh->env, env))))
-		return (0);
-	if (!(tmp = ft_substr(tmp, ft_strlen(env) + 1, ft_strlen(tmp) - ft_strlen(env))))
-	{
-		put_error(strerror(errno));
-		return (0);
-	}
-	return (tmp);
-}
-
-char	*get_identifier(char *reference)
-{
-	int		i;
-	char	*identifier;
-
-	i = 0;
-	while (reference[i] != '\0')
-	{
-		if (reference[i] == '=')
-		{
-			if (!(identifier = ft_substr(reference, 0, i)))
-			{
-				put_error(strerror(errno));
-				return (0);
-			}
-			return (identifier);
-		}
+		sh->file_descriptors[i][0] = 0;
+		sh->file_descriptors[i][1] = 0;
+		sh->file_descriptors[i][2] = 0;
+		sh->file_descriptors[i][3] = 0;
 		i++;
 	}
-	return (0);
+	return (1);
 }
