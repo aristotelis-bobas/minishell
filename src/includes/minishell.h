@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/03/09 13:46:12 by novan-ve      #+#    #+#                 */
-/*   Updated: 2020/05/24 01:48:40 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/24 13:23:06 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void			env_show(t_minishell *sh);
 void			export(int ac, char **av, t_minishell *sh);
 void			unset(int ac, char **av, t_minishell *sh);
 
-void			execute(char **av, t_minishell *sh, int i);
+void			execute(char **av, t_minishell *sh);
 char			*get_executable(char *arg, t_minishell *sh);
 
 char			***allocate_array(int line_count, int *arg_count);

@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/19 00:25:13 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/24 01:56:06 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/24 13:23:15 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	waiting(t_minishell *sh)
 	}
 }
 
-void	execute(char **av, t_minishell *sh, int i)
+void	execute(char **av, t_minishell *sh)
 {
 	pid_t	pid;
 
@@ -76,12 +76,6 @@ void	execute(char **av, t_minishell *sh, int i)
 		put_error(strerror(errno));
 	else if (pid == 0)
 	{
-		if (sh->file_descriptors[i][2])
-		{
-			if ((dup2(sh->file_descriptors[i][3], 0)) < 0)
-				put_error(strerror(errno));
-			close(sh->file_descriptors[i][3]);
-		}
 		if (execve(av[0], av, sh->env->data) < 0)
 		{
 			put_error("Command not found");

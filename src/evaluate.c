@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/07 15:50:21 by novan-ve      #+#    #+#                 */
-/*   Updated: 2020/05/24 01:55:30 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/24 13:22:50 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <string.h>
 #include <unistd.h>
 
-void	evaluate_commands(int arg_count, char **args, t_minishell *sh, int i)
+void	evaluate_commands(int arg_count, char **args, t_minishell *sh)
 {
 	if (!ft_strcmp(args[0], "exit"))
 		exit(0);
@@ -33,7 +33,7 @@ void	evaluate_commands(int arg_count, char **args, t_minishell *sh, int i)
 	else if (!ft_strcmp(args[0], "unset"))
 		unset(arg_count, args, sh);
 	else
-		execute(args, sh, i);
+		execute(args, sh);
 }
 
 void	export_command(char *arg, t_minishell *sh)
@@ -57,6 +57,12 @@ void	set_file_descriptor(t_minishell *sh, int i)
 		if ((dup2(sh->file_descriptors[i][1], 1)) < 0)
 			put_error(strerror(errno));
 		close(sh->file_descriptors[i][1]);
+	}
+	if (sh->file_descriptors[i][2])
+	{
+		if ((dup2(sh->file_descriptors[i][3], 0)) < 0)
+			put_error(strerror(errno));
+		close(sh->file_descriptors[i][3]);
 	}
 }
 
@@ -83,7 +89,7 @@ void	evaluate(t_minishell *sh)
 	{
 		export_command(sh->args[i][0], sh);
 		set_file_descriptor(sh, i);
-		evaluate_commands(sh->arg_count[i], sh->args[i], sh, i);
+		evaluate_commands(sh->arg_count[i], sh->args[i], sh);
 		reset_file_descriptor(sh, i);
 		i++;
 	}
