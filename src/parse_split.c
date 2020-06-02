@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/16 20:44:49 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/23 14:33:24 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/26 14:05:50 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,8 @@ int				traverse_word(t_minishell *sh, int i)
 			break ;
 		if (is_redirect(sh->line[i]))
 			start++;
-		if (is_redirect(sh->line[i]) && i > start && !(count % 2))
-			break ;
-		if (is_redirect(sh->line[i]) && !is_redirect(sh->line[i + 1]) && !(count % 2))
-		{
-			i++;
-			break ;
-		}
-		if (sh->line[i] == ';' && !(count % 2))
-			break ;
+		if (trav_word_util(sh, i, count, start) != -1)
+			return (trav_word_util(sh, i, count, start));
 		if ((sh->line[i] == '\'' || sh->line[i] == '"') && !quote)
 		{
 			quote = sh->line[i];
@@ -95,21 +88,15 @@ static void		count_args(t_minishell *sh)
 			i++;
 		}
 		else
-		{
-			i = traverse_word(sh, i);
-			sh->arg_count[y]++;
-		}
+			i = count_args_helper(sh, i, y);
 	}
 }
 
-int				split(t_minishell *sh)
+int				split(t_minishell *sh, int i)
 {
-	int		i;
 	int		x;
 	int		y;
-	int		start;
 
-	i = 0;
 	x = 0;
 	y = 0;
 	while (sh->line[i] != '\0')
@@ -124,13 +111,9 @@ int				split(t_minishell *sh)
 		}
 		else
 		{
-			start = i;
-			i = traverse_word(sh, i);
-			if (!(sh->args[x][y] = ft_substr(sh->line, start, i - start)))
-			{
-				put_error(strerror(errno));
+			i = split_sub(sh, i, x, y);
+			if (i == -1)
 				return (0);
-			}
 			y++;
 		}
 	}
@@ -139,13 +122,18 @@ int				split(t_minishell *sh)
 
 int				parse_split(t_minishell *sh)
 {
+	int		i;
+
+	i = 0;
 	count_lines(sh);
-	if (!(sh->arg_count = allocate_counter(sh->line_count)))
+	sh->arg_count = allocate_counter(sh->line_count);
+	if (!sh->arg_count)
 		return (0);
 	count_args(sh);
-	if (!(sh->args = allocate_array(sh->line_count, sh->arg_count)))
+	sh->args = allocate_array(sh->line_count, sh->arg_count);
+	if (!sh->args)
 		return (0);
-	if (!split(sh))
+	if (!split(sh, i))
 		return (0);
 	if (!parse_sanitize(sh))
 		return (0);

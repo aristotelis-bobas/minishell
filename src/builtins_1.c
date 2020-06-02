@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   builtins.c                                         :+:    :+:            */
+/*   builtins_1.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/07 15:44:26 by novan-ve      #+#    #+#                 */
-/*   Updated: 2020/05/22 21:28:15 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/30 14:50:06 by novan-ve      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 #include <string.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 void	echo(int ac, char **av, t_minishell *sh)
@@ -42,35 +43,6 @@ void	echo(int ac, char **av, t_minishell *sh)
 	env_add("?=0", sh->env);
 }
 
-void	cd(int ac, char **av, t_minishell *sh)
-{
-	int		exit;
-
-	exit = 0;
-	if (ac == 1)
-	{
-		if (chdir(get_env(sh, "HOME")))
-		{
-			put_error(strerror(errno));
-			exit = 1;
-		}
-	}
-	else if (ac > 2)
-	{
-		put_error("Too many arguments");
-		exit = 1;
-	}
-	else if (chdir(av[1]))
-	{
-		put_error(strerror(errno));
-		exit = 1;
-	}
-	if (exit == 1)
-		env_add("?=1", sh->env);
-	else
-		env_add("?=0", sh->env);
-}
-
 void	pwd(t_minishell *sh)
 {
 	char	path[1024];
@@ -85,4 +57,28 @@ void	pwd(t_minishell *sh)
 		ft_printf("%s\n", (path));
 		env_add("?=0", sh->env);
 	}
+}
+
+void	ft_exit(int arg_count, char **args, t_minishell *sh)
+{
+	int		ret;
+
+	ft_printf("exit\n");
+	if (arg_count == 1)
+		exit(0);
+	ret = ft_atoi(args[1], args[0]);
+	if (args[0][0] == 'f')
+	{
+		ft_printf("Minishell: ");
+		ft_printf("exit: %s: numeric argument required\n", args[1]);
+		exit(2);
+	}
+	if (args[0][1] == 'g')
+		ret *= -1;
+	if (args[0][1] == 'g' && arg_count < 3)
+		exit(256 - ret % 256);
+	if (arg_count < 3)
+		exit(ret % 256);
+	put_error("exit: too many arguments");
+	env_add("?=1", sh->env);
 }

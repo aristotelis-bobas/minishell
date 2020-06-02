@@ -1,34 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parse.c                                            :+:    :+:            */
+/*   parse_expand_3.c                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/05/14 16:16:35 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/28 18:56:27 by abobas        ########   odam.nl         */
+/*   Created: 2020/05/29 15:54:30 by abobas        #+#    #+#                 */
+/*   Updated: 2020/05/29 16:06:29 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
+#include <stdlib.h>
 
-int		parse(t_minishell *sh)
+int		parse_expand_home(t_minishell *sh)
 {
-	if (!parse_read(sh))
-		return (0);
-	if (!parse_split(sh))
-		return (0);
-	if (!parse_validate(sh))
-		return (0);
-	if (!parse_quotes(sh))
-		return (0);
-	if (!parse_expand(sh))
-		return (0);
-	if (!parse_validate(sh))
-		return (0);
-	if (!parse_pipe(sh))
-		return (0);
-	if (!parse_redirect(sh))
-		return (0);
+	int		i;
+	int		j;
+
+	i = 0;
+	while (i < sh->line_count)
+	{
+		j = 0;
+		while (j < sh->arg_count[i])
+		{
+			if (!(ft_strcmp(sh->args[i][j], "~")) && !sh->data[i][j])
+			{
+				free(sh->args[i][j]);
+				sh->args[i][j] = get_env(sh, "HOME");
+				if (!sh->args[i][j])
+					return (0);
+			}
+			j++;
+		}
+		i++;
+	}
 	return (1);
 }

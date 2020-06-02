@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/15 21:14:01 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/22 19:02:13 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/30 12:55:32 by novan-ve      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,8 @@ void				ft_printf(char *str, ...);
 void				ft_putstr(char *str);
 void				ft_putnbr_base(int n, int base);
 void				ft_putchar(char c);
+int					ft_isalpha(int c);
+int					ft_isdigit(int c);
+int					ft_atoi(const char *str, char *arg);
 
 #endif

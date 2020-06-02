@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   utilities_2.c                                      :+:    :+:            */
+/*   utilities_3.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/17 02:38:51 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/22 18:27:45 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/29 18:07:34 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,32 @@ int		env_cmp(char *reference, char *data)
 		return (1);
 }
 
+int		expand_length_loop(t_minishell *sh, char *src, int start, int i)
+{
+	char	*var;
+	char	*env;
+	int		length;
+
+	var = ft_substr(src, start, i - start);
+	if (!var)
+	{
+		put_error(strerror(errno));
+		return (-1);
+	}
+	env = get_env(sh, var);
+	free(var);
+	length = ft_strlen(env);
+	if (env)
+		free(env);
+	return (length);
+}
+
 int		expand_length(t_minishell *sh, char *src)
 {
 	int		i;
 	int		length;
 	int		start;
-	char	*var;
-	char	*env;
+	int		tmp;
 
 	i = 0;
 	length = 0;
@@ -52,16 +71,10 @@ int		expand_length(t_minishell *sh, char *src)
 			start = i;
 			while (is_var_char(src[i]))
 				i++;
-			if (!(var = ft_substr(src, start, i - start)))
-			{
-				put_error(strerror(errno));
-				return (-1);
-			}
-			env = get_env(sh, var);
-			free(var);
-			length += ft_strlen(env);
-			if (env)
-				free(env);
+			tmp = expand_length_loop(sh, src, start, i);
+			if (tmp == -1)
+				return (0);
+			length += tmp;
 		}
 		else
 			length++;
@@ -69,7 +82,7 @@ int		expand_length(t_minishell *sh, char *src)
 	return (length);
 }
 
-int			vector_search_env(t_vector *v, char *reference)
+int		vector_search_env(t_vector *v, char *reference)
 {
 	int		index;
 
@@ -83,38 +96,18 @@ int			vector_search_env(t_vector *v, char *reference)
 	return (-1);
 }
 
-char		*get_env(t_minishell *sh, char *env)
+char	*get_env(t_minishell *sh, char *env)
 {
 	char	*tmp;
-	
-	if (!(tmp = vector_get(sh->env, vector_search_env(sh->env, env))))
+
+	tmp = vector_get(sh->env, vector_search_env(sh->env, env));
+	if (!tmp)
 		return (0);
-	if (!(tmp = ft_substr(tmp, ft_strlen(env) + 1, ft_strlen(tmp) - ft_strlen(env))))
+	tmp = ft_substr(tmp, ft_strlen(env) + 1, ft_strlen(tmp) - ft_strlen(env));
+	if (!tmp)
 	{
 		put_error(strerror(errno));
 		return (0);
 	}
 	return (tmp);
-}
-
-char	*get_identifier(char *reference)
-{
-	int		i;
-	char	*identifier;
-
-	i = 0;
-	while (reference[i] != '\0')
-	{
-		if (reference[i] == '=')
-		{
-			if (!(identifier = ft_substr(reference, 0, i)))
-			{
-				put_error(strerror(errno));
-				return (0);
-			}
-			return (identifier);
-		}
-		i++;
-	}
-	return (0);
 }

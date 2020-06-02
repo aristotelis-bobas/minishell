@@ -6,7 +6,7 @@
 #    By: abobas <abobas@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/15 21:54:45 by abobas        #+#    #+#                  #
-#    Updated: 2020/05/22 19:02:26 by abobas        ########   odam.nl          #
+#    Updated: 2020/05/30 12:55:39 by novan-ve      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,10 @@ OBJ = 		ft_printf.o \
 			ft_strjoin.o \
 			ft_strtrim.o \
 			ft_split.o \
+			ft_atoi.o \
 			ft_itoa.o \
+			ft_isdigit.o \
+			ft_isalpha.o \
 			vector_add.o \
 			vector_delete.o \
 			vector_free.o \

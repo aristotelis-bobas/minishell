@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   utilities_3.c                                      :+:    :+:            */
+/*   utilities_4.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/17 02:38:51 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/23 15:14:05 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/29 17:59:24 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ int		is_var(char *str)
 
 int		is_var_char(char c)
 {
-	return (c != ';' && c != '$' && c != '\'' && !is_space(c) && c);
+	if (c != ';' && c != '$' && c != '\'' && !is_space(c))
+		if (c && c != '"' && c != '\'')
+			return (1);
+	return (0);
 }
 
 int		is_env(char *str)
@@ -40,6 +43,8 @@ int		is_env(char *str)
 	{
 		if (str[i] == '=')
 			return (1);
+		if (ft_isdigit(str[i]))
+			return (-1);
 		i++;
 	}
 	return (0);

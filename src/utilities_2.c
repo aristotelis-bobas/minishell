@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/23 16:45:43 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/24 01:51:28 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/28 12:43:50 by novan-ve      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,41 +15,88 @@
 #include <string.h>
 #include <errno.h>
 
-void	free_file_descriptors(t_minishell *sh, int line_count)
+void	free_file_descriptor(int **file_descriptor, int line_count)
 {
 	int		y;
 
 	y = 0;
 	while (y < line_count)
 	{
-		if (sh->file_descriptors[y])
-			free(sh->file_descriptors[y]);
+		if (file_descriptor[y])
+			free(file_descriptor[y]);
 		y++;
 	}
-	free(sh->file_descriptors);
+	free(file_descriptor);
 }
 
-int		allocate_file_descriptors(t_minishell *sh)
+int		**allocate_file_descriptor(int line_count)
 {
-	int 	i;
+	int		i;
+	int		**file_descriptor;
 
 	i = 0;
-	sh->file_descriptors = (int**)malloc(sizeof(int*) * sh->line_count);
-	if (!sh->file_descriptors)
+	file_descriptor = (int**)malloc(sizeof(int*) * line_count);
+	if (!file_descriptor)
 		return (0);
-	while (i < sh->line_count)
+	while (i < line_count)
 	{
-		sh->file_descriptors[i] = (int*)malloc(sizeof(int) * 4);
-		if (!sh->file_descriptors[i])
+		file_descriptor[i] = (int*)malloc(sizeof(int) * 4);
+		if (!file_descriptor[i])
 		{
-			free_file_descriptors(sh, i);
+			free_file_descriptor(file_descriptor, i);
 			return (0);
 		}
-		sh->file_descriptors[i][0] = 0;
-		sh->file_descriptors[i][1] = 0;
-		sh->file_descriptors[i][2] = 0;
-		sh->file_descriptors[i][3] = 0;
+		file_descriptor[i][0] = 0;
+		file_descriptor[i][1] = 0;
+		file_descriptor[i][2] = 0;
+		file_descriptor[i][3] = 0;
 		i++;
 	}
-	return (1);
+	return (file_descriptor);
+}
+
+int		count_pipes(char **arg)
+{
+	int		count;
+	int		i;
+
+	count = 0;
+	i = 0;
+	while (arg[i] != 0)
+	{
+		if (!ft_strcmp(arg[i], "|"))
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+int		check_pipes(char **arg)
+{
+	int		i;
+
+	i = 0;
+	while (arg[i] != 0)
+	{
+		if (!ft_strcmp(arg[i], "|"))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int		parse_quote_count(char *s, int data)
+{
+	int		i;
+	int		count;
+
+	i = 0;
+	count = 0;
+	while (s[i])
+	{
+		if (s[i] == '"' || (s[i] == '\'' && data != 2))
+			count++;
+		i++;
+	}
+	return (count);
 }

@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/16 02:04:59 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/16 02:26:28 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/28 19:24:39 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ char	*ft_realloc(char *src, int old_size, int new_size)
 	i = 0;
 	dst = (char*)malloc(sizeof(char) * new_size);
 	if (!dst)
+	{
+		free(src);
 		return (0);
+	}
 	while (i < old_size)
 	{
 		dst[i] = src[i];

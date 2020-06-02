@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/17 02:18:52 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/23 15:02:41 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/26 17:18:09 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,23 @@
 static int		count_lines(t_minishell *sh)
 {
 	int		i;
+	int		y;
 	int		count;
-	
+
 	count = 0;
 	i = 0;
 	while (i < sh->line_count)
 	{
-		if (sh->arg_count[i] != 0)
-			count++;
+		y = 0;
+		while (y < sh->arg_count[i])
+		{
+			if (sh->args[i][y] != 0)
+			{
+				count++;
+				break ;
+			}
+			y++;
+		}
 		i++;
 	}
 	return (count);
@@ -36,7 +45,7 @@ static int		*count_args(t_minishell *sh, int *arg_count)
 	int		i;
 	int		y;
 	int		x;
-	
+
 	i = 0;
 	y = 0;
 	while (i < sh->line_count)
@@ -58,40 +67,28 @@ static int		*count_args(t_minishell *sh, int *arg_count)
 	return (arg_count);
 }
 
-char    		***fill_array(t_minishell *sh, char ***array, int line_count, int *arg_count)
+char			***fill_array(t_minishell *sh, char ***arr, int line, int *arg)
 {
 	int		i;
-	int		y;
 	int		x;
-	int		z;
-	
+
 	i = 0;
 	x = 0;
 	while (i < sh->line_count)
 	{
 		if (sh->arg_count[i] != 0)
 		{
-			y = 0;
-			z = 0;
-			while (y < sh->arg_count[i])
+			if (!array_helper(sh, arr, i, x))
 			{
-				if (sh->args[i][y] != 0)
-				{
-					if (!(array[x][z] = ft_strdup(sh->args[i][y])))
-					{
-						put_error(strerror(errno));
-						free_array(array, line_count, arg_count);
-						return (0);	
-					}
-					z++;
-				}
-				y++;
+				put_error(strerror(errno));
+				free_array(arr, line, arg);
+				return (0);
 			}
 			x++;
 		}
 		i++;
 	}
-	return (array);
+	return (arr);
 }
 
 int				**fill_data(int **data, t_minishell *sh)
@@ -100,15 +97,14 @@ int				**fill_data(int **data, t_minishell *sh)
 	int		y;
 	int		x;
 	int		z;
-	
+
 	i = 0;
 	x = 0;
 	while (i < sh->line_count)
 	{
+		y = 0;
+		z = 0;
 		if (sh->arg_count[i] != 0)
-		{
-			y = 0;
-			z = 0;
 			while (y < sh->arg_count[i])
 			{
 				if (sh->args[i][y] != 0)
@@ -118,8 +114,7 @@ int				**fill_data(int **data, t_minishell *sh)
 				}
 				y++;
 			}
-			x++;
-		}
+		x = (sh->arg_count[i] != 0) ? x + 1 : x;
 		i++;
 	}
 	return (data);
@@ -129,25 +124,22 @@ int				parse_sanitize(t_minishell *sh)
 {
 	int		line_count;
 	int		*arg_count;
-	int		**data;
 	char	***array;
 
 	line_count = count_lines(sh);
-	if (!(arg_count = allocate_counter(line_count)))
+	arg_count = allocate_counter(line_count);
+	if (!arg_count)
 		return (0);
 	arg_count = count_args(sh, arg_count);
-	if (!(array = allocate_array(line_count, arg_count)))
+	array = allocate_array(line_count, arg_count);
+	if (!array)
 		return (0);
-	if (!(array = fill_array(sh, array, line_count, arg_count)))
+	array = fill_array(sh, array, line_count, arg_count);
+	if (!array)
 		return (0);
 	if (sh->data)
-	{
-		if (!(data = allocate_data(line_count, arg_count)))
+		if (!sanitize_data(sh, line_count, arg_count))
 			return (0);
-		data = fill_data(data, sh);
-		free_data(sh->data, sh->line_count);
-		sh->data = data;
-	}
 	free_array(sh->args, sh->line_count, sh->arg_count);
 	free(sh->arg_count);
 	sh->args = array;

@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/22 14:05:37 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/22 14:51:52 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/29 12:36:51 by abobas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,34 +49,6 @@ static int		counter(char *str, char c)
 	return (count);
 }
 
-static char		**allocate_array(char **array, char *str, char c, int count)
-{
-	int	j;
-	int	i;
-	int length;
-
-	j = 0;
-	i = 0;
-	while (j < count)
-	{
-		length = 0;
-		while (str[i] == c)
-			i++;
-		while (str[i] != c && str[i] != '\0')
-		{
-			i++;
-			length++;
-		}
-		if (!(array[j] = (char*)malloc(sizeof(char) * (length + 1))))
-		{
-			free_array(array, j);
-			return (0);
-		}
-		j++;
-	}
-	return (array);
-}
-
 static char		**fill_array(char **array, char *str, char c)
 {
 	int	i;
@@ -94,7 +66,8 @@ static char		**fill_array(char **array, char *str, char c)
 			start = i;
 			while (str[i] != c && str[i] != '\0')
 				i++;
-			if (!(array[j] = ft_substr(str, start, i - start)))
+			array[j] = ft_substr(str, start, i - start);
+			if (!array[j])
 			{
 				free_array(array, j);
 				return (0);
@@ -113,10 +86,10 @@ char			**ft_split(char *str, char c)
 	if (!str)
 		return (0);
 	count = counter(str, c);
-	if (!(array = (char**)malloc(sizeof(char*) * count + 1)))
+	array = (char**)malloc(sizeof(char*) * count + 1);
+	if (!array)
 		return (0);
 	array[count] = 0;
-	if (!(array = allocate_array(array, str, c, count)))
-		return (0);
-	return (fill_array(array, str, c));
+	array = fill_array(array, str, c);
+	return (array);
 }

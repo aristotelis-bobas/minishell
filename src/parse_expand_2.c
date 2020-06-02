@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parse_expand.c                                     :+:    :+:            */
+/*   parse_expand_utils.c                               :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: abobas <abobas@student.codam.nl>             +#+                     */
+/*   By: novan-ve <novan-ve@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/05/17 23:45:04 by abobas        #+#    #+#                 */
-/*   Updated: 2020/05/23 15:32:43 by abobas        ########   odam.nl         */
+/*   Created: 2020/05/28 12:27:55 by novan-ve      #+#    #+#                 */
+/*   Updated: 2020/05/28 12:28:17 by novan-ve      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,55 @@
 #include <string.h>
 #include <errno.h>
 
+int		expand_error(char *dst)
+{
+	put_error(strerror(errno));
+	free(dst);
+	return (-1);
+}
+
 int		expand(int j, char *dst, char *env, t_minishell *sh)
 {
 	int		i;
 	char	*src;
-	
+
 	if (!env)
+		return (expand_error(dst));
+	if (env[0] == '$')
 	{
-		put_error(strerror(errno));
-		free(dst);
-		return (-1);
+		src = ft_strdup(env);
+		if (!src)
+			return (expand_error(dst));
 	}
-	src = get_env(sh, env);
+	else
+		src = get_env(sh, env);
 	free(env);
+	i = 0;
 	if (src)
-	{
-		i = 0;
 		while (src[i] != '\0')
 		{
 			dst[j] = src[i];
 			j++;
 			i++;
 		}
+	if (src)
 		free(src);
-	}
 	return (j);
 }
 
-char	*expand_arg(t_minishell *sh, char* dst, char *src)
+int		expand_start_check(int start, char *src, int i)
 {
-	int		i;
+	if (start > 1)
+		if (src[i] == '\'' && src[start - 2] == '\'')
+			start--;
+	return (start);
+}
+
+char	*expand_arg(t_minishell *sh, char *dst, char *src, int i)
+{
 	int		j;
 	int		start;
 
-	i = 0;
 	j = 0;
 	while (src[i] != '\0')
 	{
@@ -58,7 +73,9 @@ char	*expand_arg(t_minishell *sh, char* dst, char *src)
 			start = i;
 			while (is_var_char(src[i]))
 				i++;
-			if ((j = expand(j, dst, ft_substr(src, start, i - start), sh)) < 0)
+			start = expand_start_check(start, src, i);
+			j = expand(j, dst, ft_substr(src, start, i - start), sh);
+			if (j < 0)
 				return (0);
 		}
 		else
@@ -75,53 +92,20 @@ char	*expand_var(t_minishell *sh, char *src)
 {
 	char	*dst;
 	int		length;
+	int		i;
 
-	if ((length = expand_length(sh, src)) < 0)
+	length = expand_length(sh, src);
+	if (length < 0)
 		return (0);
-	if (!(dst = (char*)malloc(sizeof(char) * length + 1)))
+	dst = (char*)malloc(sizeof(char) * length + 1);
+	if (!dst)
 	{
 		free(src);
 		put_error(strerror(errno));
 		return (0);
 	}
-	dst = expand_arg(sh, dst, src);
+	i = 0;
+	dst = expand_arg(sh, dst, src, i);
 	free(src);
 	return (dst);
-}
-
-int		parse_expand_loop(t_minishell *sh)
-{
-	int		i;
-	int		j;
-
-	i = 0;
-	while (i < sh->line_count)
-	{
-		j = 0;
-		while (j < sh->arg_count[i])
-		{
-			if (is_var(sh->args[i][j]) > 0 && sh->data[i][j] != 1)
-			{
-				if (!(sh->args[i][j] = expand_var(sh, sh->args[i][j])))
-					return (0);
-				if (ft_strlen(sh->args[i][j]) == 0 && sh->data[i][j] == 0)
-				{
-					free(sh->args[i][j]);
-					sh->args[i][j] = 0;
-				}
-			}
-			j++;
-		}
-		i++;
-	}
-	return (1);
-}
-
-int		parse_expand(t_minishell *sh)
-{
-	if (!parse_expand_loop(sh))
-		return (0);
-	if (!parse_sanitize(sh))
-		return (0);
-	return (1);
 }

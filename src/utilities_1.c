@@ -6,7 +6,7 @@
 /*   By: abobas <abobas@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/07 15:26:26 by novan-ve      #+#    #+#                 */
-/*   Updated: 2020/05/18 21:46:51 by abobas        ########   odam.nl         */
+/*   Updated: 2020/05/24 14:27:56 by novan-ve      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	***allocate_array(int line_count, int *arg_count)
 		array[i][arg_count[i]] = 0;
 		i++;
 	}
-	return (array);		
+	return (array);
 }
 
 int		*allocate_counter(int line_count)
@@ -84,9 +84,9 @@ int		**allocate_data(int line_count, int *arg_count)
 	return (data);
 }
 
-void    free_array(char ***array, int line_count, int *arg_count)
+void	free_array(char ***array, int line_count, int *arg_count)
 {
-	int     x;
+	int		x;
 	int		y;
 
 	x = 0;
@@ -111,9 +111,9 @@ void    free_array(char ***array, int line_count, int *arg_count)
 	}
 }
 
-void    free_data(int **data, int line_count)
+void	free_data(int **data, int line_count)
 {
-	int     x;
+	int		x;
 
 	x = 0;
 	if (data)
