@@ -3,7 +3,7 @@
 Project for Codam (42 Network)
 
 - Assignment: writing a shell with basic functionality in C
-- Notes: includes builtins like pwd, cd, echo, exit, set, unset, env
+- Notes: includes builtins like pwd, cd, echo, exit, export, unset, env
 - Notes: supports pipes and redirections
 - Notes: expands environment variables
 - Notes: non-builtin commands are searched for within the binary folders specified by environment variables and executed after forking
