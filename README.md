@@ -1,7 +1,5 @@
 # Minishell
 
-## Project
-
 This is a project for Codam (42 Network). <br>
 
 The assignment consisted of writing a shell with basic functionality in C. <br>
