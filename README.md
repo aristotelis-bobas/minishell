@@ -8,4 +8,3 @@ It supports redirections and pipes. <br>
 It expands and updates the environment variables. <br>
 Non-builtin commands (executables) are searched for within the binary folders specified by the environment and executed in a new concurrent process. <br>
 
-I finished the project on 6/6/2020 with a grade of 100%.
